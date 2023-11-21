@@ -1,0 +1,106 @@
+---
+sidebar: sidebar 
+permalink: get-started/cert-manager-prereqs.html 
+keywords: astra control center, prereq, requirement, cert-manager, install 
+summary: Se um cert-manager já existir no cluster, você precisará executar algumas etapas de pré-requisito para que o Astra Control Center não instale seu próprio cert-manager. 
+---
+= Configurar um cert-manager externo
+:hardbreaks:
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/get-started/
+
+
+Se um cert-manager já existir no cluster do Kubernetes, você precisará executar algumas etapas de pré-requisito para que o Astra Control Center não instale seu próprio cert-manager.
+
+.Passos
+. Confirme se você tem um cert-manager instalado:
++
+[source, sh]
+----
+kubectl get pods -A | grep 'cert-manager'
+----
++
+Resposta da amostra:
+
++
+[listing]
+----
+cert-manager   essential-cert-manager-84446f49d5-sf2zd              1/1     Running    0     6d5h
+cert-manager   essential-cert-manager-cainjector-66dc99cc56-9ldmt   1/1     Running    0     6d5h
+cert-manager   essential-cert-manager-webhook-56b76db9cc-fjqrq      1/1     Running    0     6d5h
+----
+. Crie um par de certificados/chaves para o FQDN do astraAddress:
++
+[source, sh]
+----
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout tls.key -out tls.crt
+----
++
+Resposta da amostra:
+
++
+[listing]
+----
+Generating a 2048 bit RSA private key
+..................+++
+........................................+++
+writing new private key to 'tls.key'
+----
+. Crie um segredo com arquivos gerados anteriormente:
++
+[source, sh]
+----
+kubectl create secret tls selfsigned-tls --key tls.key --cert tls.crt -n <cert-manager-namespace>
+----
++
+Resposta da amostra:
+
++
+[listing]
+----
+secret/selfsigned-tls created
+----
+. Crie um arquivo ClusterIssuer que seja *exatamente* o seguinte, mas inclui o local do namespace onde seus pods cert-manager estão instalados:
++
+[source, yaml]
+----
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: astra-ca-clusterissuer
+  namespace: <cert-manager-namespace>
+spec:
+  ca:
+    secretName: selfsigned-tls
+----
++
+[source, sh]
+----
+kubectl apply -f ClusterIssuer.yaml
+----
++
+Resposta da amostra:
+
++
+[listing]
+----
+clusterissuer.cert-manager.io/astra-ca-clusterissuer created
+----
+. Verifique se o ClusterIssuer foi criado corretamente. `Ready` deve ser `True` antes que você possa prosseguir:
++
+[source, sh]
+----
+kubectl get ClusterIssuer
+----
++
+Resposta da amostra:
+
++
+[listing]
+----
+NAME                     READY   AGE
+astra-ca-clusterissuer   True    9s
+----
+. Preencha link:../get-started/install_acc.html["Processo de instalação do Astra Control Center"]o . Há um link:../get-started/install_acc.html#configure-astra-control-center["Etapa de configuração necessária para o cluster Astra Control Center YAML"] em que você altera o valor CRD para indicar que o cert-manager está instalado externamente. Você deve concluir esta etapa durante a instalação para que o Astra Control Center reconheça o cert-manager externo.
+

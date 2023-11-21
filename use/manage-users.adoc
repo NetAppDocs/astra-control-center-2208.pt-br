@@ -1,0 +1,163 @@
+---
+sidebar: sidebar 
+permalink: use/manage-users.html 
+keywords: add users, edit users, remove users, delete users 
+summary: Adicione usuários ao seu sistema Astra Control Center e remova usuários que não deveriam mais ter acesso ao sistema. 
+---
+= Gerenciar usuários
+:hardbreaks:
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/use/
+
+
+Você pode convidar, adicionar, remover e editar usuários da instalação do Astra Control Center usando a IU do Astra Control. Você pode usar a IU do Astra Control ou https://docs.netapp.com/us-en/astra-automation/index.html["API Astra Control"^] gerenciar usuários.
+
+Você também pode usar LDAP para executar a autenticação para usuários selecionados.
+
+
+
+== Utilize LDAP
+
+O LDAP é um protocolo padrão do setor para acessar informações de diretórios distribuídos e uma escolha popular para autenticação empresarial. Você pode conetar o Astra Control Center a um servidor LDAP para executar a autenticação para usuários selecionados do Astra. Em alto nível, a configuração envolve a integração do Astra com LDAP e a definição dos usuários e grupos Astra correspondentes às definições LDAP. Consulte https://docs.netapp.com/us-en/astra-automation/workflows_infra/ldap_prepare.html["Autenticação LDAP"^] para obter mais informações.
+
+
+
+== Convide usuários
+
+Proprietários e administradores de contas podem convidar novos usuários para o Astra Control Center.
+
+.Passos
+. Na área de navegação *Gerenciar sua conta*, selecione *conta*.
+. Selecione a guia *usuários*.
+. Selecione *convidar usuário*.
+. Introduza o nome e o endereço de correio eletrónico do utilizador.
+. Selecione uma função de usuário com as permissões de sistema apropriadas.
++
+Cada função fornece as seguintes permissões:
+
++
+** Um *Viewer* pode visualizar recursos.
+** Um *Membro* tem permissões de função Visualizador e pode gerenciar aplicativos e clusters, desgerenciar aplicativos e excluir snapshots e backups.
+** Um *Admin* tem permissões de função de Membro e pode adicionar e remover quaisquer outros usuários, exceto o proprietário.
+** Um *proprietário* tem permissões de função Admin e pode adicionar e remover quaisquer contas de usuário.
+
+
+. Para adicionar restrições a um utilizador com uma função Membro ou Visualizador, ative a caixa de verificação *restringir função a restrições*.
++
+Para obter mais informações sobre como adicionar restrições, link:manage-roles.html["Gerenciar funções"]consulte .
+
+. Selecione *convidar utilizadores*.
++
+O usuário recebe um e-mail informando que foi convidado para o Astra Control Center. O e-mail inclui senha temporária, que eles precisarão alterar no primeiro login.
+
+
+
+
+
+== Adicionar utilizadores
+
+Os proprietários e administradores de contas podem adicionar mais usuários à instalação do Astra Control Center.
+
+.Passos
+. Na área de navegação *Gerenciar sua conta*, selecione *conta*.
+. Selecione a guia *usuários*.
+. Selecione *Adicionar usuário*.
+. Introduza o nome do utilizador, o endereço de correio eletrónico e uma palavra-passe temporária.
++
+O utilizador terá de alterar a palavra-passe no primeiro início de sessão.
+
+. Selecione uma função de usuário com as permissões de sistema apropriadas.
++
+Cada função fornece as seguintes permissões:
+
++
+** Um *Viewer* pode visualizar recursos.
+** Um *Membro* tem permissões de função Visualizador e pode gerenciar aplicativos e clusters, desgerenciar aplicativos e excluir snapshots e backups.
+** Um *Admin* tem permissões de função de Membro e pode adicionar e remover quaisquer outros usuários, exceto o proprietário.
+** Um *proprietário* tem permissões de função Admin e pode adicionar e remover quaisquer contas de usuário.
+
+
+. Para adicionar restrições a um utilizador com uma função Membro ou Visualizador, ative a caixa de verificação *restringir função a restrições*.
++
+Para obter mais informações sobre como adicionar restrições, link:manage-roles.html["Gerenciar funções"]consulte .
+
+. Selecione *Adicionar*.
+
+
+
+
+== Gerenciar senhas
+
+Você pode gerenciar senhas para contas de usuário no Astra Control Center.
+
+
+
+=== Altere a sua palavra-passe
+
+Você pode alterar a senha da sua conta de usuário a qualquer momento.
+
+.Passos
+. Selecione o ícone Utilizador no canto superior direito do ecrã.
+. Selecione *Perfil*.
+. No menu Opções na coluna *ações* e selecione *alterar senha*.
+. Introduza uma palavra-passe que esteja em conformidade com os requisitos de palavra-passe.
+. Introduza novamente a palavra-passe para confirmar.
+. Selecione *alterar palavra-passe*.
+
+
+
+
+=== Repor a palavra-passe de outro utilizador
+
+Se a sua conta tiver permissões de função de Administrador ou proprietário, você pode redefinir senhas para outras contas de usuário, bem como suas próprias. Ao redefinir uma senha, você atribui uma senha temporária que o usuário terá que alterar ao fazer login.
+
+.Passos
+. Na área de navegação *Gerenciar sua conta*, selecione *conta*.
+. Selecione a lista suspensa *ações*.
+. Selecione *Redefinir senha*.
+. Introduza uma palavra-passe temporária que esteja em conformidade com os requisitos de palavra-passe.
+. Introduza novamente a palavra-passe para confirmar.
++
+
+NOTE: Da próxima vez que o usuário fizer login, será solicitado que o usuário altere a senha.
+
+. Selecione *Redefinir senha*.
+
+
+
+
+== Altere a função de um usuário
+
+Os usuários com a função proprietário podem alterar a função de todos os usuários, enquanto os usuários com a função Admin podem alterar a função de usuários que têm a função Admin, Member ou Viewer.
+
+.Passos
+. Na área de navegação *Gerenciar sua conta*, selecione *conta*.
+. Selecione a lista suspensa *ações*.
+. Selecione *Editar função*.
+. Selecione uma nova função.
+. Para aplicar restrições à função, ative a caixa de verificação *restringir função a restrições* e selecione uma restrição na lista.
++
+Se não houver restrições, você pode adicionar uma restrição. Para obter mais informações, link:manage-roles.html["Gerenciar funções"]consulte .
+
+. Selecione *Confirm*.
+
+
+.Resultado
+O Astra Control Center atualiza as permissões do usuário com base na nova função selecionada.
+
+
+
+== Remover usuários
+
+Os usuários com a função proprietário ou Admin podem remover outros usuários da conta a qualquer momento.
+
+.Passos
+. Na área de navegação *Gerenciar sua conta*, selecione *conta*.
+. Na guia *usuários*, marque a caixa de seleção na linha de cada usuário que você deseja remover.
+. No menu Opções na coluna *ações*, selecione *Remover usuário(s)*.
+. Quando for solicitado, confirme a exclusão digitando a palavra "remover" e selecione *Sim, Remover usuário*.
+
+
+.Resultado
+O Astra Control Center remove o usuário da conta.

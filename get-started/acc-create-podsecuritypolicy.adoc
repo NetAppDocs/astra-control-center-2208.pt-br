@@ -1,0 +1,66 @@
+---
+sidebar: sidebar 
+permalink: get-started/acc-create-podsecuritypolicy.html 
+keywords: Create podsecurity policy, pod, security, policy, Astra Control, kubernetes 
+summary: Você precisa criar uma política de segurança de pods menos restritiva para permitir que o Astra Control crie e atualize pods em clusters gerenciados. 
+---
+= Crie uma política de segurança de pod personalizada
+:hardbreaks:
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/get-started/
+
+
+O Astra Control precisa criar e gerenciar pods do Kubernetes nos clusters que ele gerencia. Se o cluster usar uma política de segurança de pod restritiva que não permita a criação de pod privilegiados ou permitir que processos nos contentores de pod sejam executados como usuário raiz, você precisará criar uma política de segurança de pod menos restritiva para permitir que o Astra Control crie e gerencie esses pods.
+
+.Passos
+. Crie uma diretiva de segurança de pod para o cluster que seja menos restritiva do que a padrão e salve-a em um arquivo. Por exemplo:
++
+[source, yaml]
+----
+apiVersion: policy/v1beta1
+kind: PodSecurityPolicy
+metadata:
+  name: astracontrol
+  annotations:
+    seccomp.security.alpha.kubernetes.io/allowedProfileNames: '*'
+spec:
+  privileged: true
+  allowPrivilegeEscalation: true
+  allowedCapabilities:
+  - '*'
+  volumes:
+  - '*'
+  hostNetwork: true
+  hostPorts:
+  - min: 0
+    max: 65535
+  hostIPC: true
+  hostPID: true
+  runAsUser:
+    rule: 'RunAsAny'
+  seLinux:
+    rule: 'RunAsAny'
+  supplementalGroups:
+    rule: 'RunAsAny'
+  fsGroup:
+    rule: 'RunAsAny'
+----
+. Crie uma nova função para a diretiva de segurança do pod.
++
+[source, sh]
+----
+kubectl-admin create role psp:astracontrol \
+    --verb=use \
+    --resource=podsecuritypolicy \
+    --resource-name=astracontrol
+----
+. Vincule a nova função à conta de serviço.
++
+[source, sh]
+----
+kubectl-admin create rolebinding default:psp:astracontrol \
+    --role=psp:astracontrol \
+    --serviceaccount=astracontrol-service-account:default
+----
+

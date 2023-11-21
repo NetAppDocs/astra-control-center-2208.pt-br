@@ -1,0 +1,15 @@
+---
+section: release-notes
+title: Notas de lançamento
+url: "/release-notes/rn_overview.html"
+entries:
+- title: Novidades nesta versão do Astra Control Center
+  url: "/release-notes/whats-new.html"
+- title: Problemas conhecidos
+  url: "/release-notes/known-issues.html"
+  entries:
+  - title: Problemas conhecidos com o Astra Data Store e este lançamento do Astra
+      Control Center
+    url: "/release-notes/known-issues-ads.html"
+- title: Limitações conhecidas
+  url: "/release-notes/known-limitations.html"

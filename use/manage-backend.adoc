@@ -1,0 +1,270 @@
+---
+sidebar: sidebar 
+permalink: use/manage-backend.html 
+keywords: how to use astra control, what is astra storage, how to set up astra storage backend, ontap storage in astra, backend storage in astra 
+summary: Adicione storage para suas aplicações Kubernetes no local. O Astra Control detecta e usa os recursos já implantados, incluindo Trident, ONTAP e classes de storage associadas. 
+---
+= Gerenciar o back-end de storage
+:hardbreaks:
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/use/
+
+
+O gerenciamento de clusters de storage no Astra Control como um back-end de storage permite que você tenha vínculos entre volumes persistentes (PVS) e o back-end de storage, bem como métricas de storage adicionais. Você pode monitorar os detalhes de integridade e capacidade de storage, incluindo a performance se o Astra Control Center estiver conetado ao Cloud Insights.
+
+Para obter instruções sobre como gerenciar back-ends de storage usando a API Astra Control, consulte o link:https://docs.netapp.com/us-en/astra-automation/["Informações de API e automação do Astra"^].
+
+Você pode concluir as seguintes tarefas relacionadas ao gerenciamento de um back-end de storage:
+
+* link:../get-started/setup_overview.html#add-a-storage-backend["Adicionar um back-end de storage"]
+* <<Veja os detalhes do back-end de armazenamento>>
+* <<Desgerenciar um back-end de storage>>
+* <<Atualizar uma licença de back-end de storage do Astra Data Store>>
+* <<Atualizar um back-end de storage do Astra Data Store>>
+* <<Remover um back-end de storage>>
+* <<Adicionar nós a um cluster de back-end de storage>>
+* <<Remover nós de um cluster de back-end de storage>>
+
+
+
+
+== Veja os detalhes do back-end de armazenamento
+
+Você pode exibir informações de back-end de armazenamento no Dashboard ou na opção backends.
+
+Na página Detalhes do back-end de storage, para o Astra Data Store, você pode ver as seguintes informações:
+
+* Cluster Astra Data Store
++
+** Taxa de transferência, IOPS e latência
+** Capacidade utilizada em comparação com a capacidade total
+
+
+* Para cada volume de cluster Astra Data Store
++
+** Capacidade utilizada em comparação com a capacidade total
+** Taxa de transferência
+
+
+
+
+
+
+=== Veja os detalhes do back-end do storage no Dashboard
+
+.Passos
+. Na navegação à esquerda, selecione *Dashboard*.
+. Revise a seção de back-end de armazenamento que mostra o estado:
++
+** *Insalubre*: O armazenamento não está em um estado ideal. Isso pode ser devido a um problema de latência ou um aplicativo é degradado devido a um problema de contentor, por exemplo.
+** *Todos saudáveis*: O armazenamento foi gerenciado e está em um estado ideal.
+** *Descoberto*: O storage foi descoberto, mas não gerenciado pelo Astra Control.
+
+
+
+
+
+
+=== Veja os detalhes do back-end de armazenamento na opção backends
+
+Veja informações sobre a integridade, a capacidade e a performance do back-end (taxa de transferência de IOPS e/ou latência).
+
+Você pode ver os volumes que os aplicativos Kubernetes estão usando, que são armazenados em um back-end de storage selecionado. Com o Cloud Insights, você pode ver informações adicionais.  https://docs.netapp.com/us-en/cloudinsights/["Documentação do Cloud Insights"]Consulte .
+
+.Passos
+. Na área de navegação à esquerda, selecione *backends*.
+. Selecione o back-end de armazenamento.
++
+
+TIP: Se você se conetou ao NetApp Cloud Insights, trechos de dados do Cloud Insights aparecerão na página de backends.
+
++
+image:../use/acc_backends_ci_connection2.png["Uma captura de tela da página de backends"]
+
+. Para ir diretamente ao Cloud Insights, selecione o ícone *Cloud Insights* ao lado da imagem de métricas.
+
+
+
+
+== Desgerenciar um back-end de storage
+
+Você pode desgerenciar o backend.
+
+.Passos
+. Na navegação à esquerda, selecione *backends*.
+. Selecione o back-end de armazenamento.
+. No menu Opções na coluna *ações*, selecione *Desgerenciar*.
+. Digite "Unmanage" (Desgerenciar) para confirmar a ação.
+. Selecione *Sim, desgerencie o back-end de armazenamento*.
+
+
+
+
+== Remover um back-end de storage
+
+Você pode remover um back-end de storage que não está mais em uso. Você pode querer fazer isso para manter sua configuração simples e atualizada.
+
+
+TIP: Se você estiver removendo um back-end do Astra Data Store, ele não deverá ter sido criado pelo vCenter.
+
+.O que você vai precisar
+* Certifique-se de que o back-end de armazenamento não é gerenciado.
+* Garantir que o back-end de storage não tenha nenhum volume associado ao cluster Astra Data Store.
+
+
+.Passos
+. Na navegação à esquerda, selecione *backends*.
+. Se o back-end for gerenciado, desfaça-o.
++
+.. Selecione *Managed*.
+.. Selecione o back-end de armazenamento.
+.. Na opção *ações*, selecione *Desgerenciar*.
+.. Digite "Unmanage" (Desgerenciar) para confirmar a ação.
+.. Selecione *Sim, desgerencie o back-end de armazenamento*.
+
+
+. Selecione *descoberto*.
++
+.. Selecione o back-end de armazenamento.
+.. Na opção *ações*, selecione *Remover*.
+.. Digite "remove" para confirmar a ação.
+.. Selecione *Sim, remova o back-end de armazenamento*.
+
+
+
+
+
+
+== Atualizar uma licença de back-end de storage do Astra Data Store
+
+Você pode atualizar a licença de um back-end de storage do Astra Data Store para dar suporte a uma implantação maior ou recursos aprimorados.
+
+.O que você vai precisar
+* Um back-end de storage Astra Data Store implantado e gerenciado
+* Um arquivo de licença do Astra Data Store (entre em Contato com seu representante de vendas da NetApp para adquirir uma licença do Astra Data Store)
+
+
+.Passos
+. Na navegação à esquerda, selecione *backends*.
+. Selecione o nome de um back-end de armazenamento.
+. Em *Informação básica*, você pode ver o tipo de licença instalada.
++
+Se você passar o Mouse sobre as informações da licença, um pop-up será exibido com mais informações, como informações de expiração e direito.
+
+. Em *Licença*, selecione o ícone de edição ao lado do nome da licença.
+. Na página *Atualizar licença*, execute um dos seguintes procedimentos:
++
+|===
+| Status da licença | Ação 
+
+
+| Pelo menos uma licença foi adicionada ao Astra Data Store.  a| 
+Selecione uma licença na lista.
+
+
+
+| Nenhuma licença foi adicionada ao Astra Data Store.  a| 
+.. Selecione o botão *Add*.
+.. Selecione um ficheiro de licença para carregar.
+.. Selecione *Add* para carregar o ficheiro de licença.
+
+
+|===
+. Selecione *Atualizar*.
+
+
+
+
+== Atualizar um back-end de storage do Astra Data Store
+
+É possível atualizar o back-end do Astra Data Store a partir do Astra Control Center. Para fazer isso, primeiro você precisa fazer o upload de um pacote de atualização. O Astra Control Center usará esse pacote de atualização para atualizar o Astra Data Store.
+
+.O que você vai precisar
+* Um back-end de storage gerenciado do Astra Data Store
+* Um pacote de atualização do Astra Data Store carregado (link:manage-packages-acc.html["Gerenciar pacotes de software"]consulte )
+
+
+.Passos
+. Selecione *backends*.
+. Escolha um back-end de armazenamento Astra Data Store na lista e selecione o menu correspondente na coluna *ações*.
+. Selecione *Upgrade*.
+. Selecione uma versão de atualização na lista.
++
+Se você tiver vários pacotes de atualização em seu repositório que são versões diferentes, você pode abrir a lista suspensa para selecionar a versão que você precisa.
+
+. Selecione *seguinte*.
+. Selecione *Iniciar atualização*.
+
+
+.Resultado
+A página *backends* exibe um status *upgrade* na coluna *Status* até que a atualização esteja concluída.
+
+
+
+== Adicionar nós a um cluster de back-end de storage
+
+Você pode adicionar nós a um cluster Astra Data Store, até o número de nós suportados pelo tipo de licença instalada para Astra Data Store.
+
+.O que você vai precisar
+* Um back-end de storage Astra Data Store implantado e licenciado
+* Você adicionou o pacote de software Astra Data Store ao Astra Control Center
+* Um ou mais nós novos a serem adicionados ao cluster
+
+
+.Passos
+. Na navegação à esquerda, selecione *backends*.
+. Selecione o nome de um back-end de armazenamento.
+. Em informações básicas, você pode ver o número de nós nesse cluster de back-end de storage.
+. Em *nós*, selecione o ícone de edição ao lado do número de nós.
+. Na página *Add Nodes*, insira informações sobre o novo nó ou nós:
++
+.. Atribua um rótulo de nó para cada nó.
+.. Execute um dos seguintes procedimentos:
++
+*** Se quiser que o Astra Data Store utilize sempre o número máximo de nós disponível de acordo com a sua licença, ative a caixa de verificação *sempre use até o número máximo de nós permitidos*.
+*** Se você não quiser que o Astra Data Store use sempre o número máximo de nós disponíveis, selecione o número desejado de nós totais a serem usados.
+
+
+.. Se você implantou o Astra Data Store com Protection Domains habilitado, atribua o novo nó ou nós aos domínios de proteção.
+
+
+. Selecione *seguinte*.
+. Insira o endereço IP e as informações de rede para cada novo nó. Insira um único endereço IP para um único nó novo ou um pool de endereços IP para vários nós novos.
++
+Se o Astra Data Store puder usar os endereços IP configurados durante a implantação, não será necessário inserir informações de endereço IP.
+
+. Selecione *seguinte*.
+. Revise a configuração do novo nó ou nós.
+. Selecione *Adicionar nós*.
+
+
+
+
+== Remover nós de um cluster de back-end de storage
+
+É possível remover nós de um cluster Astra Data Store. Esses nós podem ser nós íntegros ou com falha.
+
+A remoção de um nó de um cluster Astra Data Store move seus dados para outros nós no cluster e remove o nó do Astra Data Store.
+
+O processo requer as seguintes condições:
+
+* Deve haver espaço livre suficiente nos outros nós para receber os dados.
+* Deve haver 4 ou mais nós no cluster.
+
+
+.Passos
+. Na navegação à esquerda, selecione *backends*.
+. Selecione o nome de um back-end de armazenamento.
+. Selecione a guia *nodes*.
+. No menu ações, selecione *Remover*.
+. Confirme a eliminação introduzindo "remover".
+. Selecione *Sim, remover nó*.
+
+
+
+
+== Encontre mais informações
+
+* https://docs.netapp.com/us-en/astra-automation/index.html["Use a API Astra Control"^]
+

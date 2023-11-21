@@ -1,0 +1,66 @@
+---
+sidebar: sidebar 
+permalink: use/clone-apps.html 
+keywords: clone app, clone storage, clone persistent storage, clone data, move workload, clone data, migrate data, data migration, move storage, move application, move data 
+summary: Clone um aplicativo existente para criar um aplicativo duplicado no mesmo cluster do Kubernetes ou em outro cluster. A clonagem pode ajudar se você precisar mover aplicações e storage de um cluster Kubernetes para outro. Por exemplo, você pode querer mover workloads por meio de um pipeline de CD de CI e entre namespaces do Kubernetes. 
+---
+= Clonar e migrar aplicações
+:hardbreaks:
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/use/
+
+
+[role="lead"]
+Clone um aplicativo existente para criar um aplicativo duplicado no mesmo cluster do Kubernetes ou em outro cluster. Quando o Astra Control Center clones uma aplicação, ele cria um clone de sua configuração de aplicação e storage persistente.
+
+A clonagem pode ajudar se você precisar mover aplicações e storage de um cluster Kubernetes para outro. Por exemplo, você pode querer mover workloads por meio de um pipeline de CI/CD e entre namespaces do Kubernetes. Você pode usar a IU do Astra ou https://docs.netapp.com/us-en/astra-automation/index.html["API Astra Control"^] clonar e migrar aplicações.
+
+.O que você vai precisar
+Para clonar aplicativos para um cluster diferente, você precisa de um bucket padrão. Quando você adiciona seu primeiro bucket, ele se torna o bucket padrão.
+
+.Sobre esta tarefa
+* Se você implantar um aplicativo com um StorageClass explicitamente definido e precisar clonar o aplicativo, o cluster de destino precisará ter o StorageClass originalmente especificado. Clonar um aplicativo com um StorageClass explicitamente definido para um cluster que não tenha o mesmo StorageClass falhará.
+* Se você clonar uma instância implantada por operador do Jenkins CI, precisará restaurar manualmente os dados persistentes. Esta é uma limitação do modelo de implantação do aplicativo.
+* Os buckets do S3 no Astra Control Center não relatam a capacidade disponível. Antes de fazer backup ou clonar aplicativos gerenciados pelo Astra Control Center, verifique as informações do bucket no sistema de gerenciamento ONTAP ou StorageGRID.
+* Durante um backup de aplicativo ou restauração de aplicativo, você pode especificar opcionalmente um ID de bucket. Uma operação de clone de aplicativo, no entanto, sempre usa o bucket padrão que foi definido. Não há opção de alterar buckets para um clone. Se você quiser controlar qual balde é usado, você pode link:../use/manage-buckets.html#edit-a-bucket["altere o intervalo padrão"]ou fazer um link:../use/protect-apps.html#create-a-backup["backup"] seguido por um link:../use/restore-apps.html["restaurar"] separadamente.
+* Qualquer usuário membro com restrições de namespace por nome/ID de namespace ou por rótulos de namespace pode clonar ou restaurar um aplicativo para um novo namespace no mesmo cluster ou para qualquer outro cluster na conta da organização. No entanto, o mesmo usuário não pode acessar o aplicativo clonado ou restaurado no novo namespace. Depois que um novo namespace é criado por uma operação de clone ou restauração, o administrador/proprietário da conta pode editar a conta de usuário membro e atualizar as restrições de função para o usuário afetado conceder acesso ao novo namespace.
+
+
+.Considerações sobre OpenShift
+* Se você clonar um aplicativo entre clusters, os clusters de origem e destino devem ser a mesma distribuição do OpenShift. Por exemplo, se você clonar um aplicativo de um cluster OpenShift 4,7, use um cluster de destino que também é OpenShift 4,7.
+* Quando você cria um projeto para hospedar um aplicativo em um cluster OpenShift, o projeto (ou namespace Kubernetes) recebe um UID SecurityContext. Para ativar o Astra Control Center para proteger seu aplicativo e mover o aplicativo para outro cluster ou projeto no OpenShift, você precisa adicionar políticas que permitam que o aplicativo seja executado como qualquer UID. Como exemplo, os seguintes comandos OpenShift CLI concedem as políticas apropriadas a um aplicativo WordPress.
++
+`oc new-project wordpress`
+`oc adm policy add-scc-to-group anyuid system:serviceaccounts:wordpress`
+`oc adm policy add-scc-to-user privileged -z default -n wordpress`
+
+
+
+.Passos
+. Selecione *aplicações*.
+. Execute um dos seguintes procedimentos:
++
+** Selecione o menu Opções na coluna *ações* para o aplicativo desejado.
+** Selecione o nome da aplicação pretendida e selecione a lista pendente de estado no canto superior direito da página.
+
+
+. Selecione *Clone*.
+. *Detalhes do clone*: Especifique detalhes para o clone:
++
+** Introduza um nome.
+** Insira um namespace para o clone.
+** Escolha um cluster de destino para o clone.
+** Escolha se deseja criar o clone a partir de um instantâneo ou backup existente. Se você não selecionar essa opção, o Astra Control Center criará o clone a partir do estado atual do aplicativo.
+
+
+. *Fonte*: Se você optar por clonar de um instantâneo ou backup existente, escolha o instantâneo ou o backup que deseja usar.
+. Selecione *Revisão*.
+. *Clone Summary*: Revise os detalhes sobre o clone e selecione *Clone*.
+
+
+.Resultado
+O Astra Control Center clones essa aplicação com base nas informações fornecidas por você. A operação de clone é bem-sucedida quando o novo clone de aplicativo está no `Available` estado na página *aplicativos*.
+
+
+NOTE: Após uma operação de proteção de dados (clone, backup, restauração) e subsequente redimensionamento persistente de volume, há até vinte minutos de atraso antes que o novo tamanho de volume seja exibido na IU. A operação de proteção de dados é bem-sucedida em minutos. Você pode usar o software de gerenciamento do back-end de storage para confirmar a alteração no tamanho do volume.

@@ -1,0 +1,137 @@
+---
+sidebar: sidebar 
+permalink: use/manage-packages-acc.html 
+keywords: manage package, packages, install 
+summary: Você pode carregar e instalar pacotes no Astra Control Center. 
+---
+= Gerenciar pacotes de software
+:hardbreaks:
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/use/
+
+
+O NetApp oferece recursos adicionais para o Centro de Controle Astra com pacotes de software que podem ser baixados no site de suporte da NetApp. Depois de conetar repositórios Docker e artefato, você pode carregar e importar pacotes para adicionar essa funcionalidade ao Astra Control Center. Você pode usar a interface da Web CLI ou a interface da Web do Astra Control Center para gerenciar pacotes de software.
+
+.O que você vai precisar
+* Cluster do Kubernetes com Astra Control Center instalado
+* Um repositório de imagem Docker conetado para armazenar imagens de pacotes de software. Para obter mais informações, link:manage-connections.html["Gerenciar conexões de repositório"]consulte .
+* Um repositório de artefatos conetado para armazenar binários e artefatos de pacotes de software. Para obter mais informações, link:manage-connections.html["Gerenciar conexões de repositório"]consulte .
+* Um pacote de software do site de suporte da NetApp
+
+
+
+
+== Carregue imagens de pacotes de software para os repositórios
+
+O Astra Control Center faz referência a imagens de pacotes e artefatos em repositórios conetados. Você pode fazer upload de imagens e artefatos para os repositórios usando a CLI.
+
+.Passos
+. Baixe o pacote de software do site de suporte da NetApp e salve-o em uma máquina que tenha o `kubectl` utilitário instalado.
+. Extraia o arquivo de pacote compactado e altere o diretório para o local do arquivo de pacote Astra Control (por exemplo, `acc.manifest.yaml` ).
+. Envie as imagens do pacote para o repositório Docker. Faça as seguintes substituições:
++
+** Substitua BUNDLE_FILE pelo nome do arquivo de pacote Astra Control (por exemplo, `acc.manifest.yaml` ).
+** Substitua my_REGISTRY pela URL do repositório Docker.
+** Substitua my_REGISTRY_USER pelo nome de usuário.
+** Substitua my_REGISTRY_TOKEN por um token autorizado para o Registro.
++
+[listing]
+----
+kubectl astra packages push-images -m BUNDLE_FILE -r MY_REGISTRY -u MY_REGISTRY_USER -p MY_REGISTRY_TOKEN
+----
+
+
+. Se o pacote tiver artefatos, copie os artefatos para o repositório de artefatos. Substitua BUNDLE_FILE pelo nome do arquivo de pacote Astra Control e network_LOCATION pelo local de rede para copiar os arquivos de artefato para:
++
+[listing]
+----
+kubectl astra packages copy-artifacts -m BUNDLE_FILE -n NETWORK_LOCATION
+----
+
+
+
+
+== Adicione um pacote de software
+
+Você pode importar pacotes de software usando um arquivo de pacote Astra Control Center. Isso instala o pacote e disponibiliza o software para uso do Astra Control Center.
+
+
+
+=== Adicione um pacote de software usando a IU da Web Astra Control
+
+Você pode usar a IU da Web do Astra Control Center para adicionar um pacote de software que foi carregado para os repositórios conetados.
+
+.Passos
+. Na área de navegação *Gerenciar sua conta*, selecione *conta*.
+. Selecione a guia *Pacotes*.
+. Selecione o botão *Add*.
+. Na caixa de diálogo de seleção de ficheiros, selecione o ícone de carregamento.
+. Escolha um arquivo de pacote Astra Control, em `.yaml` formato, para upload.
+. Selecione *Adicionar*.
+
+
+.Resultado
+Se o arquivo do pacote for válido e as imagens e artefatos do pacote estiverem localizados nos repositórios conetados, o pacote será adicionado ao Astra Control Center. Quando o status na coluna *Status* mudar para *disponível*, você pode usar o pacote. Você pode passar o Mouse sobre o status de um pacote para obter mais informações.
+
+
+NOTE: Se uma ou mais imagens ou artefatos de um pacote não forem encontrados no repositório, uma mensagem de erro será exibida para esse pacote.
+
+
+
+=== Adicione um pacote de software usando a CLI
+
+Você pode usar a CLI para importar um pacote de software que você carregou para os repositórios conetados. Para fazer isso, primeiro você precisa Registrar seu ID de conta do Astra Control Center e um token de API.
+
+.Passos
+. Usando um navegador da Web, faça login na IU da Web do Astra Control Center.
+. No Painel, selecione o ícone do usuário no canto superior direito.
+. Selecione *Acesso à API*.
+. Observe o ID da conta perto da parte superior da tela.
+. Selecione *Generate API token*.
+. Na caixa de diálogo resultante, selecione *Generate API token*.
+. Observe o token resultante e selecione *Fechar*. Na CLI, altere os diretórios para o local `.yaml` do arquivo de pacote no conteúdo do pacote extraído.
+. Importe o pacote usando o arquivo bundle, fazendo as seguintes substituições:
++
+** Substitua BUNDLE_FILE pelo nome do arquivo de pacote Astra Control.
+** Substitua O SERVIDOR pelo nome DNS da instância Astra Control.
+** Substitua account_ID e TOKEN pelo ID da conta e token da API que você gravou anteriormente.
++
+[listing]
+----
+kubectl astra packages import -m BUNDLE_FILE -u SERVER -a ACCOUNT_ID -k TOKEN
+----
+
+
+
+
+.Resultado
+Se o arquivo do pacote for válido e as imagens e artefatos do pacote estiverem localizados nos repositórios conetados, o pacote será adicionado ao Astra Control Center.
+
+
+NOTE: Se uma ou mais imagens ou artefatos de um pacote não forem encontrados no repositório, uma mensagem de erro será exibida para esse pacote.
+
+
+
+== Remova um pacote de software
+
+Você pode usar a IU da Web do Astra Control Center para remover um pacote de software importado anteriormente no Astra Control Center.
+
+.Passos
+. Na área de navegação *Gerenciar sua conta*, selecione *conta*.
+. Selecione a guia *Pacotes*.
++
+Você pode ver a lista de pacotes instalados e seus status nesta página.
+
+. Na coluna *ações* para o pacote, abra o menu ações.
+. Selecione *Eliminar*.
+
+
+.Resultado
+O pacote é excluído do Astra Control Center, mas as imagens e artefatos do pacote permanecem em seus repositórios.
+
+[discrete]
+== Encontre mais informações
+
+* link:manage-connections.html["Gerenciar conexões de repositório"]
+
